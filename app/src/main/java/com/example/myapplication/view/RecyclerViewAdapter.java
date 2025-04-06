@@ -15,33 +15,28 @@ import java.util.ArrayList;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
     private static final String TAG = "CustomAdapter";
-    private ArrayList<Produto> mDataSet;
+    private ArrayList<String> mDataSet;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final TextView preco;
-        private final TextView nome;
+        private final TextView horario;
 
         public ViewHolder(View v) {
             super(v);
-            nome = v.findViewById(R.id.textNome);
-            preco = v.findViewById(R.id.textPreco);
+            horario = v.findViewById(R.id.textHorario);
 
             v.setOnClickListener(view -> {
                 Log.d(TAG, "Elemento " + getAdapterPosition() + " clicado.");
             });
         }
 
-        public TextView getPreco() {
-            return preco;
+        public TextView getHorario() {
+            return horario;
         }
 
-        public TextView getNome() {
-            return nome;
-        }
     }
 
-    public RecyclerViewAdapter(ArrayList<Produto> produtos) {
-        this.mDataSet = produtos;
+    public RecyclerViewAdapter(ArrayList<String> horarios) {
+        this.mDataSet = horarios;
     }
 
     @Override
@@ -53,9 +48,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
-        Produto p = mDataSet.get(position);
-        viewHolder.getNome().setText(p.getDescricao());
-        viewHolder.getPreco().setText(String.valueOf(p.getPreco()));
+        String h = mDataSet.get(position);
+        viewHolder.getHorario().setText(h);
     }
 
     @Override
