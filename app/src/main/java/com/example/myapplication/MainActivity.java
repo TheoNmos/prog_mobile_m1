@@ -41,10 +41,11 @@ public class MainActivity extends AppCompatActivity {
         Date dataAtual = new Date();
         SimpleDateFormat sdfHora = new SimpleDateFormat("HH");
         int horaAtual = Integer.parseInt(sdfHora.format(dataAtual));
-        Log.d("info", "teste");
         System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-        checkHorarios(horaAtual,listaHorarios);
-
+        checkHorarios(horaAtual, listaHorarios);
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
     }
 
 
@@ -82,9 +83,10 @@ public class MainActivity extends AppCompatActivity {
                     continue;
                 }
 
+
                 boolean horarioExiste = false;
-                for(HorarioElem horarioObj: listaHorarios){
-                    if (horarioObj.getHora().equals(horario + ":00h")){
+                for(int j = 0; j< listaHorarios.size()-1;j++){
+                    if (listaHorarios.get(j).getHora().equals(horario + ":00h")){
                         horarioExiste = true;
                     }
                 }
@@ -106,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        TextView counterTextView = findViewById(R.id.counter);
 
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -118,8 +121,21 @@ public class MainActivity extends AppCompatActivity {
         System.out.println("-----------------------------");
 
 
-//        adapter = new RecyclerViewAdapter(listaHorarios);
-//        recyclerView.setAdapter(adapter);
+        adapter = new RecyclerViewAdapter(listaHorarios, new RecyclerViewAdapter.OnDescricaoChangedListener() {
+            @Override
+            public void onDescricaoChanged() {
+                int filledCount = 0;
+                for (HorarioElem elem : listaHorarios) {
+                    if (elem.getDescricao() != null && !elem.getDescricao().trim().isEmpty()) {
+                        filledCount++;
+                    }
+                }
+                counterTextView.setText(String.valueOf(filledCount));
+            }
+        });
+        // o adapter foi criado juntamente com a função que trata mudanças nos elementos editText da lista
+        // foi a maneira que achamos de conectar os itens da recyclerView com a MainActivity
+        recyclerView.setAdapter(adapter);
 
 //        LinearLayout l1 = (LinearLayout) findViewById(R.id.linearLayout);
 //        int horario = new Date().getHours();

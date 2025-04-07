@@ -2,6 +2,7 @@ package com.example.myapplication.view;
 
 import android.nfc.Tag;
 import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,12 @@ import java.util.ArrayList;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
     private static final String TAG = "CustomAdapter";
     private ArrayList<HorarioElem> mDataSet;
+    private OnDescricaoChangedListener onDescricaoChangedListener;
+
+    // Interface de callback para notificar a MainActivity
+    public interface OnDescricaoChangedListener {
+        void onDescricaoChanged();
+    }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView hora;
@@ -43,8 +50,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     }
 
-    public RecyclerViewAdapter(ArrayList<HorarioElem> horarios) {
+    public RecyclerViewAdapter(ArrayList<HorarioElem> horarios, OnDescricaoChangedListener listener) {
         this.mDataSet = horarios;
+        this.onDescricaoChangedListener = listener;
     }
 
     @Override
@@ -59,10 +67,21 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         HorarioElem h = mDataSet.get(position);
         viewHolder.getHorario().setText(h.getHora());
         viewHolder.getDescricao().setText(h.getDescricao());
-        viewHolder.getDescricao().setOnFocusChangeListener((v, hasFocus) -> {
-            if (!hasFocus) {
-                EditText editText = (EditText) v;
-                h.setDescricao(editText.getText().toString());
+        // Adiciona um TextWatcher para monitorar as mudanças no EditText
+        viewHolder.getDescricao().addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                h.setDescricao(s.toString());
+                if (onDescricaoChangedListener != null) {
+                    onDescricaoChangedListener.onDescricaoChanged();
+                }
             }
         });
     }
