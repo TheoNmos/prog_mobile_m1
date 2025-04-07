@@ -40,13 +40,15 @@ public class MainActivity extends AppCompatActivity {
         int horaAtual = Integer.parseInt(sdfHora.format(dataAtual));
         System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAA");
         // testando com horário específico
-        checkHorarios(18,listaHorarios);
+        checkHorarios(horaAtual,listaHorarios);
 
     }
 
 
 
     public void checkHorarios(int horaAtual, ArrayList<String> listaHorarios){
+        int qtdItens = horaAtual-8; // qtdItens é meio que a quantidade que deveria ter de elementos na tela
+
         if (horaAtual < 9){
             // se abrir o app antes de começar o dia de trabalho
             if (listaHorarios.size() > 0){
@@ -54,20 +56,32 @@ public class MainActivity extends AppCompatActivity {
             }
             return;
         }
-        if (horaAtual > 17 && listaHorarios.size() == 9){
+
+        if (listaHorarios.size() == 9){
             // nesse caso todos os horarios já foram inseridos na lista
             return;
         }
-        int qtdItens = horaAtual-8; // qtdItens é meio que a quantidade que deveria ter de elementos na tela
+
+        // para tratar troca de dias
+        if(listaHorarios.size() > qtdItens){
+            listaHorarios.clear();
+        }
+
         // verifica se os horarios adicionados ja sao os esperados
         if (listaHorarios.size() < qtdItens){
-            for (int i = 0; i < qtdItens; i++){
+            for (int i = listaHorarios.size(); i < qtdItens; i++){
                 // esse for seria pra adionar todos os horários que faltaram desde a ultima vez que o user entrou
                 int horario = 8+i;
+                if (horario>17){
+                    break;
+                }
                 if (horario == 12){
                     continue;
                 }
-                listaHorarios.add(horario + ":00h");
+
+                if(!listaHorarios.contains(horario + ":00h")){
+                    listaHorarios.add(horario + ":00h");
+                }
             }
         }
 
@@ -91,7 +105,9 @@ public class MainActivity extends AppCompatActivity {
         SimpleDateFormat sdfHora = new SimpleDateFormat("HH");
         int horaAtual = Integer.parseInt(sdfHora.format(dataAtual));
 
-        checkHorarios(18,listaHorarios);
+        checkHorarios(horaAtual,listaHorarios);
+        System.out.println("-----------------------------");
+
 
         adapter = new RecyclerViewAdapter(listaHorarios);
         recyclerView.setAdapter(adapter);

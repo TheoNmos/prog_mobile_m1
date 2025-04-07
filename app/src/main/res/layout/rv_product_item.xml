@@ -12,8 +12,8 @@
         android:layout_marginStart="4dp"
         android:layout_marginBottom="10dp"
         android:ems="10"
+        android:hint="Fale o que você fez"
         android:inputType="textPersonName"
-        android:text="Fale o que você fez"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textHorario" />
 
