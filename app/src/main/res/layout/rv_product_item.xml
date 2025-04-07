@@ -6,6 +6,7 @@
     android:layout_height="wrap_content">
 
     <EditText
+        android:hint="Fale o que você fez"
         android:id="@+id/textDescription"
         android:layout_width="252dp"
         android:layout_height="42dp"
@@ -13,7 +14,6 @@
         android:layout_marginBottom="10dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Fale o que você fez"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textHorario" />
 
