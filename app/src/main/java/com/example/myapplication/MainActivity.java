@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                 boolean horarioExiste = false;
-                for(int j = 0; j< listaHorarios.size()-1;j++){
+                for(int j = 0; j < listaHorarios.size();j++){
                     if (listaHorarios.get(j).getHora().equals(horario + ":00h")){
                         horarioExiste = true;
                     }
