@@ -3,29 +3,36 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="#e1ebeb"
+
+    >
+
 
     <TextView
         android:id="@+id/nome"
-        android:layout_width="201dp"
-        android:layout_height="72dp"
+        android:layout_width="154dp"
+        android:layout_height="65dp"
         android:layout_marginStart="16dp"
+
         android:text="TextView"
-        android:textSize="16sp"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.783" />
 
     <ImageView
         android:id="@+id/imagem"
-        android:layout_width="114dp"
-        android:layout_height="117dp"
-        android:layout_marginStart="12dp"
+        android:layout_width="140dp"
+        android:layout_height="115dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/nome"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/ic_launcher_foreground" />
 
     <TextView

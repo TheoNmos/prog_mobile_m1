@@ -14,7 +14,7 @@
         android:gravity="center"
         android:text="Cardápio do Restaurante"
         android:textSize="24sp"
-        android:background="#DDFFFF"
+        android:background="#cfe3e3"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
