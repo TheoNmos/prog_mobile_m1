@@ -5,26 +5,38 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <EditText
-        android:hint="Fale o que você fez"
-        android:id="@+id/textDescription"
-        android:layout_width="252dp"
-        android:layout_height="42dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginBottom="10dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textHorario" />
-
     <TextView
-        android:id="@+id/textHorario"
-        android:layout_width="87dp"
-        android:layout_height="28dp"
-        android:layout_marginStart="6dp"
-        android:layout_marginTop="8dp"
+        android:id="@+id/nome"
+        android:layout_width="201dp"
+        android:layout_height="72dp"
+        android:layout_marginStart="16dp"
         android:text="TextView"
-        android:textSize="20sp"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imagem"
+        android:layout_width="114dp"
+        android:layout_height="117dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/nome"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_launcher_foreground" />
+
+    <TextView
+        android:id="@+id/preco"
+        android:layout_width="47dp"
+        android:layout_height="31dp"
+        android:layout_marginStart="12dp"
+        android:text="5.99"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imagem"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

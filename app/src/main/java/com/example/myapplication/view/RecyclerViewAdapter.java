@@ -1,58 +1,58 @@
 package com.example.myapplication.view;
 
-import android.nfc.Tag;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.net.Uri;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
-import com.example.myapplication.model.HorarioElem;
+import com.example.myapplication.model.ItemCardapio;
 
 import java.util.ArrayList;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
     private static final String TAG = "CustomAdapter";
-    private ArrayList<HorarioElem> mDataSet;
-    private OnDescricaoChangedListener onDescricaoChangedListener;
-
-    // Interface de callback para notificar a MainActivity
-    public interface OnDescricaoChangedListener {
-        void onDescricaoChanged();
-    }
+    private ArrayList<ItemCardapio> mDataSet;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final TextView hora;
-        private final EditText descricao;
+        private final TextView nome;
+        private final TextView preco;
+        private final ImageView imagem;
 
         public ViewHolder(View v) {
             super(v);
-            hora = v.findViewById(R.id.textHorario);
-            descricao = v.findViewById(R.id.textDescription);
+            nome = v.findViewById(R.id.nome);
+            preco = v.findViewById(R.id.preco);
+            imagem = v.findViewById(R.id.imagem);
 
             v.setOnClickListener(view -> {
                 Log.d(TAG, "Elemento " + getAdapterPosition() + " clicado.");
             });
         }
 
-        public TextView getHorario() {
-            return hora;
+        public TextView getNome() {
+            return nome;
         }
 
-        public EditText getDescricao(){return descricao;}
+        public TextView getPreco(){
+            return preco;
+        }
+
+        public ImageView getImagem(){
+            return imagem;
+        }
 
 
     }
 
-    public RecyclerViewAdapter(ArrayList<HorarioElem> horarios, OnDescricaoChangedListener listener) {
-        this.mDataSet = horarios;
-        this.onDescricaoChangedListener = listener;
+    public RecyclerViewAdapter(ArrayList<ItemCardapio> cardapio) {
+        this.mDataSet = cardapio;
     }
 
     @Override
@@ -64,26 +64,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
-        HorarioElem h = mDataSet.get(position);
-        viewHolder.getHorario().setText(h.getHora());
-        viewHolder.getDescricao().setText(h.getDescricao());
+        ItemCardapio i = mDataSet.get(position);
+        viewHolder.getNome().setText(i.getNome());
+        viewHolder.getPreco().setText(i.getPreco());
+        viewHolder.getImagem().setImageURI(Uri.parse(i.getImagemUrl()));
         // Adiciona um TextWatcher para monitorar as mudanças no EditText
-        viewHolder.getDescricao().addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                h.setDescricao(s.toString());
-                if (onDescricaoChangedListener != null) {
-                    onDescricaoChangedListener.onDescricaoChanged();
-                }
-            }
-        });
     }
 
     @Override
