@@ -2,26 +2,26 @@
     {
         "nome": "Agua",
         "preco": 4.9,
-        "img": "https://www.4oito.com.br/wp-content/uploads/2022/01/agua-1.jpg"
+        "img": "https://raw.githubusercontent.com/TheoNmos/prog_mobile_m1/refs/heads/refactor_to_m2/app/sampledata/images/agua.bmp"
     },
     {
         "nome": "Hambúrguer",
         "preco": 14.9,
-        "img": "https://example.com/images/hamburguer.jpg"
+        "img": "https://raw.githubusercontent.com/TheoNmos/prog_mobile_m1/refs/heads/refactor_to_m2/app/sampledata/images/burguer.bmp"
     },
     {
         "nome": "Pizza",
         "preco": 28.5,
-        "img": "https://example.com/images/pizza.jpg"
+        "img": "https://raw.githubusercontent.com/TheoNmos/prog_mobile_m1/refs/heads/refactor_to_m2/app/sampledata/images/pizza.bmp"
     },
     {
         "nome": "Refrigerante",
         "preco": 6.0,
-        "img": "https://example.com/images/refrigerante.jpg"
+        "img": "https://raw.githubusercontent.com/TheoNmos/prog_mobile_m1/refs/heads/refactor_to_m2/app/sampledata/images/refri.bmp"
     },
     {
         "nome": "Salada",
         "preco": 12.0,
-        "img": "https://example.com/images/salada.jpg"
+        "img": "https://raw.githubusercontent.com/TheoNmos/prog_mobile_m1/refs/heads/refactor_to_m2/app/sampledata/images/salada.bmp"
     }
 ]
