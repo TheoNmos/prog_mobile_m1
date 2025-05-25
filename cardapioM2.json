@@ -1,26 +1,26 @@
 [
     {
-        "name": "Agua",
+        "nome": "Agua",
         "preco": 4.9,
         "img": "https://www.4oito.com.br/wp-content/uploads/2022/01/agua-1.jpg"
     },
     {
-        "name": "Hambúrguer",
+        "nome": "Hambúrguer",
         "preco": 14.9,
         "img": "https://example.com/images/hamburguer.jpg"
     },
     {
-        "name": "Pizza",
+        "nome": "Pizza",
         "preco": 28.5,
         "img": "https://example.com/images/pizza.jpg"
     },
     {
-        "name": "Refrigerante",
+        "nome": "Refrigerante",
         "preco": 6.0,
         "img": "https://example.com/images/refrigerante.jpg"
     },
     {
-        "name": "Salada",
+        "nome": "Salada",
         "preco": 12.0,
         "img": "https://example.com/images/salada.jpg"
     }
