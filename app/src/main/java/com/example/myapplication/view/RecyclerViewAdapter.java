@@ -15,10 +15,11 @@ import com.example.myapplication.R;
 import com.example.myapplication.model.ItemCardapio;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
     private static final String TAG = "CustomAdapter";
-    private ArrayList<ItemCardapio> mDataSet;
+    private List<ItemCardapio> mDataSet;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView nome;
@@ -51,7 +52,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     }
 
-    public RecyclerViewAdapter(ArrayList<ItemCardapio> cardapio) {
+    public RecyclerViewAdapter(List<ItemCardapio> cardapio) {
         this.mDataSet = cardapio;
     }
 
@@ -67,7 +68,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         ItemCardapio i = mDataSet.get(position);
         viewHolder.getNome().setText(i.getNome());
         viewHolder.getPreco().setText(i.getPreco());
-        viewHolder.getImagem().setImageURI(Uri.parse(i.getImagemUrl()));
+//        viewHolder.getImagem().setImageURI(Uri.parse(i.getImagemUrl()));
         // Adiciona um TextWatcher para monitorar as mudanças no EditText
     }
 

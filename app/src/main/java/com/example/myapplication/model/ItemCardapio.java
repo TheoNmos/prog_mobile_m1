@@ -12,6 +12,15 @@ public class ItemCardapio {
         this.imagemUrl = imagemUrl;
     }
 
+    @Override
+    public String toString() {
+        return "ItemCardapio{" +
+                "nome='" + nome + '\'' +
+                ", preco='" + preco + '\'' +
+                ", imagemUrl='" + imagemUrl + '\'' +
+                '}';
+    }
+
     public String getNome() {
         return nome;
     }
