@@ -72,6 +72,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         // Adiciona um TextWatcher para monitorar as mudanças no EditText
     }
 
+
     @Override
     public int getItemCount() {
         return mDataSet.size();

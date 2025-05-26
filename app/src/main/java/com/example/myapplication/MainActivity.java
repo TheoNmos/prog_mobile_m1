@@ -31,6 +31,13 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Scanner;
+import androidx.room.Room;
+import com.example.myapplication.database.AppDatabase;
+import com.example.myapplication.database.ItemCardapioDao;
+import com.example.myapplication.database.ItemCardapioEntity;
+import com.example.myapplication.utils.ImageUtils;
+import java.util.concurrent.Executors;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -38,6 +45,12 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerViewAdapter adapter;
 
     ArrayList<ItemCardapio> cardapio = new ArrayList<>();
+
+    private AppDatabase db;
+    private ItemCardapioDao dao;
+
+
+
 
     private List<ItemCardapio> parseJsonParaCardapio(String json) {
         Gson gson = new Gson();
@@ -47,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
 
     // implementando AsyncTask como inner class da activity.
     private class GetCardapioServices extends AsyncTask<Void, Void, String> {
-        // Ajuste aqui a URL do seu endpoint que retorna o JSON do cardápio
+
         private static final String RESOURCE_URL = "https://raw.githubusercontent.com/TheoNmos/prog_mobile_m1/refs/heads/refactor_to_m2/cardapioM2.json";
 
         @Override
@@ -67,7 +80,8 @@ public class MainActivity extends AppCompatActivity {
 
                 Scanner scanner = new Scanner(is).useDelimiter("\\A");
                 String response = scanner.hasNext() ? scanner.next() : "";
-                Log.i("GetCardapioService", "requisição concluída: " + response);
+
+                Log.i("GetCardapioService", "Requisição concluída: " + response);
                 return response;
             } catch (Exception e) {
                 Log.e("GetCardapioService", "Erro ao conectar em " + RESOURCE_URL, e);
@@ -81,39 +95,56 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String json) {
             cardapio.clear();
             if (json != null) {
-                // 1. Converte a String JSON em lista de ItemCardapio e adiciona a arraylist
-                List<ItemCardapio> cardapio_parsed = parseJsonParaCardapio(json);
-                System.out.println(cardapio_parsed.toString());
-                cardapio.addAll(cardapio_parsed);
+                List<ItemCardapio> cardapioParsed = parseJsonParaCardapio(json);
+                cardapio.addAll(cardapioParsed);
 
+                Executors.newSingleThreadExecutor().execute(() -> {
+                    try {
+                        // 🔸 Limpa o banco anterior
+                        dao.clearAll();
 
-                // 2. Salva no banco local (Room) e dispara download das imagens...
-//                Executors.newSingleThreadExecutor().execute(() -> {
-//                    dao.clearAll();
-//                    dao.insertAll(lista);
-//                    for (ItemCardapio it : lista) {
-//                        try {
-//                            String fn = "img_" + it.getNome().hashCode() + ".jpg";
-//                            String path = ImageUtils.downloadAndSave(
-//                                    getApplicationContext(),
-//                                    it.getImagemUrl(),
-//                                    fn
-//                            );
-//                            it.setImagemLocalPath(path);
-//                            dao.update(it);
-//                        } catch (Exception ignored) { }
-//                    }
-//                    // 3. Atualiza a RecyclerView na thread principal
-//                    runOnUiThread(() -> adapter.updateData(lista, isOnline()));
-//                });
+                        List<ItemCardapioEntity> entities = new ArrayList<>();
+
+                        for (ItemCardapio item : cardapioParsed) {
+                            try {
+                                // 🔸 Salva imagem local
+                                String fileName = "img_" + item.getNome().hashCode() + ".jpg";
+                                String imagePath = ImageUtils.downloadAndSave(
+                                        getApplicationContext(),
+                                        item.getImagemUrl(),
+                                        fileName
+                                );
+
+                                // 🔸 Cria a entidade para o banco
+                                ItemCardapioEntity entity = new ItemCardapioEntity(
+                                        item.getNome(),
+                                        item.getPreco(),
+                                        item.getImagemUrl(),
+                                        imagePath
+                                );
+                                entities.add(entity);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        // 🔸 Salva todos no banco
+                        dao.insertAll(entities);
+
+                        runOnUiThread(() -> adapter.notifyDataSetChanged());
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+
             } else {
-                return;
-                // fallback: carregar do SQLite
-//                loadFromCache();
+                // 🔸 Se falhar, carrega do cache local
+                loadFromCache();
             }
-            adapter.notifyDataSetChanged();
         }
     }
+
 
 
 //    TextView teste = new TextView(l1.getContext());
@@ -144,12 +175,46 @@ public class MainActivity extends AppCompatActivity {
         adapter = new RecyclerViewAdapter(cardapio);
         recyclerView.setAdapter(adapter);
 
+        db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "cardapio-db").build();
+        dao = db.itemCardapioDao();
+
+
         new GetCardapioServices().execute();
 
         System.out.println("executou");
-
-
     }
+
+    private void loadFromCache() {
+        Executors.newSingleThreadExecutor().execute(() -> {
+            List<ItemCardapioEntity> items = dao.getAll();
+            cardapio.clear();
+            for (ItemCardapioEntity it : items) {
+                ItemCardapio item = new ItemCardapio(
+                        it.getNome(),
+                        isOnline() ? it.getPreco() : "a consultar",
+                        it.getImagemLocalPath()
+                );
+                cardapio.add(item);
+            }
+
+            runOnUiThread(() -> adapter.notifyDataSetChanged());
+        });
+    }
+
+
+    private boolean isOnline() {
+        try {
+            HttpURLConnection con = (HttpURLConnection) new URL("https://www.google.com").openConnection();
+            con.setRequestMethod("HEAD");
+            con.setConnectTimeout(2000);
+            con.setReadTimeout(2000);
+            int responseCode = con.getResponseCode();
+            return (200 <= responseCode && responseCode <= 399);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 
 
         // UTILIZANDO LINEAR LAYOUT
