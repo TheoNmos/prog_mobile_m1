@@ -21,9 +21,16 @@ public class RecyclerViewAdapter
         extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
     private List<ItemCardapio> mDataSet;
+    private boolean isOfflineMode; // New field to store offline status
 
-    public RecyclerViewAdapter(List<ItemCardapio> data) {
+    public RecyclerViewAdapter(List<ItemCardapio> data, boolean isOfflineMode) {
         this.mDataSet = data;
+        this.isOfflineMode = isOfflineMode;
+    }
+
+    // New method to update offline mode
+    public void setOfflineMode(boolean offlineMode) {
+        isOfflineMode = offlineMode;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -48,14 +55,19 @@ public class RecyclerViewAdapter
     public void onBindViewHolder(ViewHolder vh, int pos) {
         ItemCardapio item = mDataSet.get(pos);
         vh.nome.setText(item.getNome());
-        vh.preco.setText(item.getPreco());
+
+        if (isOfflineMode) {
+            vh.preco.setText("a consultar"); // Show "a consultar" in offline mode
+        } else {
+            vh.preco.setText(item.getPreco()); // Show actual price in online mode
+        }
 
         String path = item.getImagePath();
-        if (path != null) {
+        if (path != null && new File(path).exists()) { // Check if file exists
             Bitmap bmp = BitmapFactory.decodeFile(path);
             vh.imagem.setImageBitmap(bmp);
         } else {
-            vh.imagem.setImageResource(R.drawable.placeholder);
+            vh.imagem.setImageResource(R.drawable.placeholder); // Use placeholder if image not found
         }
     }
 

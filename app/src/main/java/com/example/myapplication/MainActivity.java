@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerViewAdapter adapter;
     private CardapioDBHelper dbHelper;
     private List<ItemCardapio> listaCache;
+    private boolean isOfflineMode = false; // Flag to indicate offline mode
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,12 +38,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         dbHelper = new CardapioDBHelper(this);
-        listaCache = dbHelper.getAllItems();
+        listaCache = dbHelper.getAllItems(); // Load initial data from DB
 
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        adapter = new RecyclerViewAdapter(listaCache);
+        // Pass initial offline status (assuming online until proven otherwise)
+        adapter = new RecyclerViewAdapter(listaCache, isOfflineMode);
         recyclerView.setAdapter(adapter);
 
         // Inicia o fluxo de download + DB
@@ -60,6 +62,15 @@ public class MainActivity extends AppCompatActivity {
                 HttpURLConnection conJson = (HttpURLConnection)
                         new URL(JSON_URL).openConnection();
                 conJson.setRequestMethod("GET");
+                conJson.setConnectTimeout(5000); // Add connection timeout
+                conJson.setReadTimeout(5000);    // Add read timeout
+
+                int responseCode = conJson.getResponseCode();
+                if (responseCode != HttpURLConnection.HTTP_OK) {
+                    // If not successful, return null to indicate failure
+                    return null;
+                }
+
                 InputStream isJson = conJson.getInputStream();
                 String json = new Scanner(isJson).useDelimiter("\\A")
                         .next();
@@ -75,6 +86,17 @@ public class MainActivity extends AppCompatActivity {
                     HttpURLConnection conImg = (HttpURLConnection)
                             imgUrl.openConnection();
                     conImg.setRequestMethod("GET");
+                    conImg.setConnectTimeout(5000); // Add connection timeout
+                    conImg.setReadTimeout(5000);    // Add read timeout
+
+                    int imgResponseCode = conImg.getResponseCode();
+                    if (imgResponseCode != HttpURLConnection.HTTP_OK) {
+                        // If image download fails, set path to null so placeholder is used
+                        it.setImagePath(null);
+                        conImg.disconnect();
+                        continue; // Skip to next item
+                    }
+
                     InputStream isImg = conImg.getInputStream();
 
                     // grava em storage interno
@@ -98,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
                 return lista;
             } catch (Exception e) {
                 e.printStackTrace();
+                // Return null on any exception during network operation
                 return null;
             }
         }
@@ -113,9 +136,14 @@ public class MainActivity extends AppCompatActivity {
                 // 5) Recarrega do DB para a listaCache e notifica adapter
                 listaCache.clear();
                 listaCache.addAll(dbHelper.getAllItems());
-                adapter.notifyDataSetChanged();
+                isOfflineMode = false; // Successfully fetched, so not in offline mode
+            } else {
+                // If list is null, it means network operation failed.
+                // Keep showing existing cache and set offline mode.
+                isOfflineMode = true;
             }
-            // se falhar, continua mostrando o cache existente
+            adapter.setOfflineMode(isOfflineMode); // Update adapter with offline status
+            adapter.notifyDataSetChanged();
         }
     }
 }

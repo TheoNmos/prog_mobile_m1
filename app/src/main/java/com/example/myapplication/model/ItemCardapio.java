@@ -21,4 +21,5 @@ public class ItemCardapio {
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
     }
+    public void setPreco(String p) {this.preco = p;}
 }
