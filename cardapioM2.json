@@ -1,6 +1,6 @@
 [
     {
-        "nome": "Agua",
+        "nome": "Agua sem gas",
         "preco": 4.9,
         "imagemUrl": "https://raw.githubusercontent.com/TheoNmos/prog_mobile_m1/refs/heads/refactor_to_m2/app/sampledata/images/agua.bmp"
     },
