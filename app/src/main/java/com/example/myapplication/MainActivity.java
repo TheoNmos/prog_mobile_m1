@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -38,17 +39,28 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         dbHelper = new CardapioDBHelper(this);
-        listaCache = dbHelper.getAllItems(); // Load initial data from DB
+        listaCache = dbHelper.getAllItems();
 
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // Pass initial offline status (assuming online until proven otherwise)
         adapter = new RecyclerViewAdapter(listaCache, isOfflineMode);
         recyclerView.setAdapter(adapter);
 
         // Inicia o fluxo de download + DB
         new GetCardapioTask().execute();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        new GetCardapioTask().execute();
+
+        Log.i("testes", "executou");
+        // codar logica geral
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
     }
 
     private class GetCardapioTask extends AsyncTask<Void,Void,List<ItemCardapio>> {
@@ -136,13 +148,15 @@ public class MainActivity extends AppCompatActivity {
                 // 5) Recarrega do DB para a listaCache e notifica adapter
                 listaCache.clear();
                 listaCache.addAll(dbHelper.getAllItems());
+                Log.i("testes", "ONLINE");
                 isOfflineMode = false; // Successfully fetched, so not in offline mode
             } else {
                 // If list is null, it means network operation failed.
                 // Keep showing existing cache and set offline mode.
                 isOfflineMode = true;
+                Log.i("testes", "modo Offline");
             }
-            adapter.setOfflineMode(isOfflineMode); // Update adapter with offline status
+            adapter.setOfflineMode(isOfflineMode);
             adapter.notifyDataSetChanged();
         }
     }
