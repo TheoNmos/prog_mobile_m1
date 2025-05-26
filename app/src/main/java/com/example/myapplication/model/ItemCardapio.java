@@ -1,10 +1,11 @@
+// src/main/java/com/example/myapplication/model/ItemCardapio.java
 package com.example.myapplication.model;
 
 public class ItemCardapio {
-
     private String nome;
     private String preco;
     private String imagemUrl;
+    private String imagePath;  // CAMPO PARA O CAMINHO LOCAL
 
     public ItemCardapio(String nome, String preco, String imagemUrl) {
         this.nome = nome;
@@ -12,36 +13,12 @@ public class ItemCardapio {
         this.imagemUrl = imagemUrl;
     }
 
-    @Override
-    public String toString() {
-        return "ItemCardapio{" +
-                "nome='" + nome + '\'' +
-                ", preco='" + preco + '\'' +
-                ", imagemUrl='" + imagemUrl + '\'' +
-                '}';
-    }
+    public String getNome()       { return nome; }
+    public String getPreco()      { return preco; }
+    public String getImagemUrl()  { return imagemUrl; }
 
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getPreco() {
-        return preco;
-    }
-
-    public void setPreco(String preco) {
-        this.preco = preco;
-    }
-
-    public String getImagemUrl() {
-        return imagemUrl;
-    }
-
-    public void setImagemUrl(String imagemUrl) {
-        this.imagemUrl = imagemUrl;
+    public String getImagePath()  { return imagePath; }
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 }

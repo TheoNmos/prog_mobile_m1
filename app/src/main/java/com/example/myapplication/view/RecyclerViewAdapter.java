@@ -1,8 +1,8 @@
+// src/main/java/com/example/myapplication/view/RecyclerViewAdapter.java
 package com.example.myapplication.view;
 
-import android.net.Uri;
-
-import android.util.Log;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,62 +14,49 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.myapplication.R;
 import com.example.myapplication.model.ItemCardapio;
 
-import java.util.ArrayList;
+import java.io.File;
 import java.util.List;
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
-    private static final String TAG = "CustomAdapter";
+public class RecyclerViewAdapter
+        extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
+
     private List<ItemCardapio> mDataSet;
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final TextView nome;
-        private final TextView preco;
-        private final ImageView imagem;
-
-        public ViewHolder(View v) {
-            super(v);
-            nome = v.findViewById(R.id.nome);
-            preco = v.findViewById(R.id.preco);
-            imagem = v.findViewById(R.id.imagem);
-
-            v.setOnClickListener(view -> {
-                Log.d(TAG, "Elemento " + getAdapterPosition() + " clicado.");
-            });
-        }
-
-        public TextView getNome() {
-            return nome;
-        }
-
-        public TextView getPreco(){
-            return preco;
-        }
-
-        public ImageView getImagem(){
-            return imagem;
-        }
-
-
+    public RecyclerViewAdapter(List<ItemCardapio> data) {
+        this.mDataSet = data;
     }
 
-    public RecyclerViewAdapter(List<ItemCardapio> cardapio) {
-        this.mDataSet = cardapio;
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView nome, preco;
+        ImageView imagem;
+        public ViewHolder(View v) {
+            super(v);
+            nome   = v.findViewById(R.id.nome);
+            preco  = v.findViewById(R.id.preco);
+            imagem = v.findViewById(R.id.imagem);
+        }
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        View v = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.rv_product_item, viewGroup, false);
+    public ViewHolder onCreateViewHolder(ViewGroup vg, int vt) {
+        View v = LayoutInflater.from(vg.getContext())
+                .inflate(R.layout.rv_product_item, vg, false);
         return new ViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, final int position) {
-        ItemCardapio i = mDataSet.get(position);
-        viewHolder.getNome().setText(i.getNome());
-        viewHolder.getPreco().setText(i.getPreco());
-//        viewHolder.getImagem().setImageURI(Uri.parse(i.getImagemUrl()));
-        // Adiciona um TextWatcher para monitorar as mudanças no EditText
+    public void onBindViewHolder(ViewHolder vh, int pos) {
+        ItemCardapio item = mDataSet.get(pos);
+        vh.nome.setText(item.getNome());
+        vh.preco.setText(item.getPreco());
+
+        String path = item.getImagePath();
+        if (path != null) {
+            Bitmap bmp = BitmapFactory.decodeFile(path);
+            vh.imagem.setImageBitmap(bmp);
+        } else {
+            vh.imagem.setImageResource(R.drawable.placeholder);
+        }
     }
 
     @Override
