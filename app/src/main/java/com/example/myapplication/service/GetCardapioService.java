@@ -41,4 +41,5 @@ public class GetCardapioService extends AsyncTask<Void, Void, String>{
             if (con != null) con.disconnect();
         }
     }
+
 }
